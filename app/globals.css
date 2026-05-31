@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #14181c;
+  --color-orange: #ff8000;
+  --color-orange-hot: #e84e24;
+  --color-green: #00e054;
+  --color-green-deep: #00b042;
+  --color-blue: #40bcf4;
+  --color-mute: #99aabb;
+  --color-softer: #bbccdd;
+  --color-card: #1c2127;
+  --color-line: #2c3440;
+
+  --font-family-sans: "DM Sans", system-ui, sans-serif;
+  --font-family-serif: "DM Serif Display", Georgia, serif;
+
+  --animate-fadeIn: fadeIn 260ms ease-out both;
+  --animate-fadeInUp: fadeInUp 260ms ease-out both;
+}
+
+:root {
+  --font-body: var(--font-family-sans);
+  --font-display: var(--font-family-serif);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: #14181c;
+  color: #ffffff;
+  font-family: var(--font-body), "DM Sans", sans-serif;
+  min-height: 100vh;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  35%       { transform: translate(40px, -55px) scale(1.07); }
+  65%       { transform: translate(-28px, 28px) scale(0.96); }
+}
+
+@keyframes float-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30%       { transform: translate(-45px, 38px) scale(0.95); }
+  60%       { transform: translate(32px, -48px) scale(1.05); }
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.input-wrapper:focus-within {
+  border-color: rgba(0, 224, 84, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(0, 224, 84, 0.08);
+}
