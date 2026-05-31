@@ -2,38 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
+import { toPng } from "html-to-image";
 
 type RoastResult = { username: string; roast: string };
 
-/* ------------------------------------------------------------------ */
-/*  Animation variants                                                 */
-/* ------------------------------------------------------------------ */
-
 const spring = { type: "spring", stiffness: 380, damping: 26 } as const;
-
 const EASE = [0.23, 1, 0.32, 1] as [number, number, number, number];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: EASE },
-  },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.11, delayChildren: 0.15 } },
 };
-
-/* ------------------------------------------------------------------ */
-/*  Cycling loading messages                                           */
-/* ------------------------------------------------------------------ */
 
 const LOADING_MSGS = [
   "Analyzing your questionable taste…",
@@ -42,10 +26,6 @@ const LOADING_MSGS = [
   "Reading between the reels…",
   "Calculating your pretentiousness score…",
 ];
-
-/* ------------------------------------------------------------------ */
-/*  Icons                                                              */
-/* ------------------------------------------------------------------ */
 
 const Icon = {
   Flame: (props: React.SVGProps<SVGSVGElement>) => (
@@ -85,10 +65,6 @@ const Icon = {
   ),
 };
 
-/* ------------------------------------------------------------------ */
-/*  Markdown renderer                                                  */
-/* ------------------------------------------------------------------ */
-
 function RoastText({ text }: { text: string }) {
   const parts = text.split(/(\*[^*]+\*)/g);
   return (
@@ -103,10 +79,6 @@ function RoastText({ text }: { text: string }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Sub-components                                                     */
-/* ------------------------------------------------------------------ */
-
 function Navbar() {
   return (
     <motion.header
@@ -118,30 +90,32 @@ function Navbar() {
     >
       <div
         className="flex items-center justify-between w-full mx-auto"
-        style={{ padding: "0 48px", height: "68px", maxWidth: "1280px" }}
+        style={{ padding: "0 16px", height: "52px", maxWidth: "1280px" }}
       >
+        {/* Logo — always one line */}
         <motion.div
           className="flex items-center"
-          style={{ gap: "12px" }}
+          style={{ gap: "8px", flexShrink: 0 }}
           whileHover={{ scale: 1.03 }}
           transition={spring}
         >
-          <span className="flex items-center">
-            <span className="inline-block w-4 h-4 rounded-full bg-orange" style={{ outline: "2px solid #14181c" }} />
-            <span className="inline-block w-4 h-4 rounded-full bg-green"  style={{ outline: "2px solid #14181c", marginLeft: "-6px" }} />
-            <span className="inline-block w-4 h-4 rounded-full bg-blue"   style={{ outline: "2px solid #14181c", marginLeft: "-6px" }} />
+          <span className="flex items-center" style={{ flexShrink: 0 }}>
+            <span className="inline-block rounded-full bg-orange" style={{ width: "12px", height: "12px", outline: "2px solid #14181c" }} />
+            <span className="inline-block rounded-full bg-green" style={{ width: "12px", height: "12px", outline: "2px solid #14181c", marginLeft: "-4px" }} />
+            <span className="inline-block rounded-full bg-blue" style={{ width: "12px", height: "12px", outline: "2px solid #14181c", marginLeft: "-4px" }} />
           </span>
-          <span className="text-white tracking-tight" style={{ fontSize: "17px", fontWeight: 600 }}>
+          <span className="text-white whitespace-nowrap" style={{ fontSize: "14px", fontWeight: 600, letterSpacing: "-0.01em" }}>
             Letterboxd <span className="text-mute" style={{ fontWeight: 400 }}>roast</span>
           </span>
         </motion.div>
 
-        <div className="flex items-center" style={{ gap: "8px" }}>
+        {/* Right */}
+        <div className="flex items-center" style={{ gap: "6px", flexShrink: 0 }}>
           <span
-            className="inline-flex items-center text-green border border-green/30 rounded-full bg-green/10"
-            style={{ gap: "6px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", padding: "6px 14px" }}
+            className="inline-flex items-center text-green border border-green/30 rounded-full bg-green/10 whitespace-nowrap"
+            style={{ gap: "4px", fontSize: "8px", fontWeight: 700, letterSpacing: "0.14em", padding: "4px 8px" }}
           >
-            <span className="rounded-full bg-green animate-pulse" style={{ width: "6px", height: "6px", flexShrink: 0 }} />
+            <span className="rounded-full bg-green animate-pulse" style={{ width: "4px", height: "4px", flexShrink: 0 }} />
             AI-POWERED
           </span>
           <motion.button
@@ -169,24 +143,23 @@ function Hero() {
       animate="show"
       className="w-full flex justify-center"
     >
-      <div className="text-center w-full px-6" style={{ maxWidth: "860px" }}>
-
+      <div className="text-center w-full" style={{ maxWidth: "860px", padding: "0 24px" }}>
         <motion.div
           variants={fadeUp}
           className="flex items-center justify-center"
-          style={{ gap: "12px", marginBottom: "24px" }}
+          style={{ gap: "10px", marginBottom: "18px" }}
         >
-          <span className="inline-block h-px bg-green" style={{ width: "28px", opacity: 0.7 }} aria-hidden />
-          <span className="text-green font-bold whitespace-nowrap" style={{ fontSize: "11px", letterSpacing: "0.22em" }}>
+          <span className="inline-block h-px bg-green" style={{ width: "18px", opacity: 0.7 }} aria-hidden />
+          <span className="text-green font-bold" style={{ fontSize: "9px", letterSpacing: "0.2em" }}>
             FOR CINEPHILES WHO CAN TAKE A HIT
           </span>
-          <span className="inline-block h-px bg-green" style={{ width: "28px", opacity: 0.7 }} aria-hidden />
+          <span className="inline-block h-px bg-green" style={{ width: "18px", opacity: 0.7 }} aria-hidden />
         </motion.div>
 
         <motion.h1
           variants={fadeUp}
-          className="font-serif text-white text-balance"
-          style={{ fontSize: "clamp(48px, 8vw, 80px)", lineHeight: 1.04, letterSpacing: "-0.02em" }}
+          className="font-serif text-white"
+          style={{ fontSize: "clamp(38px, 10vw, 80px)", lineHeight: 1.06, letterSpacing: "-0.02em" }}
         >
           Your movie taste deserves{" "}
           <span
@@ -199,12 +172,11 @@ function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="text-mute text-balance text-center"
-          style={{ fontSize: "16px", lineHeight: 1.6, maxWidth: "38rem", margin: "28px auto 0" }}
+          className="text-mute text-center"
+          style={{ fontSize: "clamp(13px, 3.5vw, 15px)", lineHeight: 1.6, maxWidth: "34rem", margin: "16px auto 0" }}
         >
           Enter your Letterboxd username and let AI judge your entire personality based on your watch history.
         </motion.p>
-
       </div>
     </motion.div>
   );
@@ -230,19 +202,18 @@ function RoastInput({ value, onChange, onSubmit, loading, loadingMsg }: InputPro
       animate="show"
       transition={{ delay: 0.48 }}
       className="w-full flex justify-center"
-      style={{ marginTop: "40px" }}
+      style={{ marginTop: "24px" }}
     >
       <form
-        className="w-full px-6"
-        style={{ maxWidth: "520px" }}
+        className="w-full"
+        style={{ maxWidth: "480px", padding: "0 24px" }}
         onSubmit={(e) => { e.preventDefault(); if (!disabled) onSubmit(); }}
       >
-        <div
-          className="input-wrapper flex items-stretch bg-card border border-line rounded-xl overflow-hidden transition-all duration-200"
-        >
+        <div className="flex items-stretch bg-card border border-line rounded-xl overflow-hidden transition-all duration-200">
+          {/* Shortened prefix on mobile */}
           <span
             className="flex items-center text-mute border-r border-line whitespace-nowrap"
-            style={{ padding: "0 16px", fontSize: "14px", backgroundColor: "#16191e" }}
+            style={{ padding: "0 10px", fontSize: "11px", backgroundColor: "#16191e" }}
           >
             letterboxd.com/
           </span>
@@ -254,7 +225,7 @@ function RoastInput({ value, onChange, onSubmit, loading, loadingMsg }: InputPro
             spellCheck={false}
             autoComplete="off"
             className="flex-1 bg-transparent outline-none text-white placeholder:text-mute/70"
-            style={{ padding: "14px 16px", fontSize: "15px" }}
+            style={{ padding: "13px 12px", fontSize: "15px", minWidth: 0 }}
           />
         </div>
 
@@ -271,15 +242,12 @@ function RoastInput({ value, onChange, onSubmit, loading, loadingMsg }: InputPro
               ? "bg-green/30 text-ink/60 cursor-not-allowed"
               : "bg-green text-ink hover:bg-green-deep hover:text-white",
           ].join(" ")}
-          style={{ marginTop: "12px", padding: "16px", fontSize: "15px" }}
+          style={{ marginTop: "10px", padding: "15px", fontSize: "15px" }}
         >
           {loading ? (
             <span className="flex items-center gap-2">
               <Icon.Spinner />
-              <span
-                key={loadingMsg}
-                style={{ animation: "msg-in 300ms ease-out both" }}
-              >
+              <span key={loadingMsg} style={{ animation: "msg-in 300ms ease-out both" }}>
                 {loadingMsg}
               </span>
             </span>
@@ -304,6 +272,7 @@ type ResultProps = {
 
 function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
   const [copied, setCopied] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   function copy() {
     if (!navigator.clipboard) return;
@@ -313,20 +282,39 @@ function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
     });
   }
 
+  function shareToX() {
+    const preview = roast.slice(0, 150).trim();
+    const text = `my letterboxd got roasted 💀\n\n"${preview}..."\n\nget roasted → https://letterboxd-roast.vercel.app/`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+  }
+
+  async function downloadImage() {
+    if (!cardRef.current) return;
+    await document.fonts.ready;
+    const dataUrl = await toPng(cardRef.current, {
+      backgroundColor: "#1c2127",
+      pixelRatio: 2,
+    });
+    const link = document.createElement("a");
+    link.download = `roast-${username}.png`;
+    link.href = dataUrl;
+    link.click();
+  }
+
   const paragraphs = roast.split(/\n\n+/).filter(Boolean);
 
   return (
-    <div className="w-full flex justify-center" style={{ marginTop: "32px" }}>
-      <section className="w-full px-6" style={{ maxWidth: "720px" }}>
+    <div className="w-full flex justify-center" style={{ marginTop: "20px" }}>
+      <section className="w-full" style={{ maxWidth: "680px", padding: "0 24px" }}>
         <div
+          ref={cardRef}
           className="bg-card rounded-2xl relative overflow-hidden"
           style={{
-            padding: "28px 32px",
+            padding: "18px 20px",
             boxShadow:
               "0 0 0 1px rgba(255,128,0,0.14), 0 0 50px rgba(255,128,0,0.07), 0 20px 60px rgba(0,0,0,0.45)",
           }}
         >
-          {/* Decorative top line */}
           <div
             aria-hidden
             className="absolute top-0 left-0 right-0"
@@ -336,9 +324,8 @@ function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
             }}
           />
 
-          {/* Card header */}
-          <div className="flex items-center justify-between" style={{ marginBottom: "20px" }}>
-            <span className="text-orange font-bold tracking-[0.18em]" style={{ fontSize: "11px" }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: "14px" }}>
+            <span className="text-orange font-bold tracking-[0.16em]" style={{ fontSize: "10px" }}>
               AI ROAST — {username.toUpperCase()}
             </span>
             <motion.button
@@ -354,17 +341,16 @@ function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
             </motion.button>
           </div>
 
-          {/* Roast text */}
-          <div className="text-white" style={{ fontSize: "15.5px", lineHeight: 1.65 }}>
+          <div className="text-white" style={{ fontSize: "clamp(13.5px, 3.8vw, 15.5px)", lineHeight: 1.7 }}>
             {paragraphs.map((para, i) => (
-              <p key={i} style={{ marginBottom: i < paragraphs.length - 1 ? "16px" : 0 }}>
+              <p key={i} style={{ marginBottom: i < paragraphs.length - 1 ? "14px" : 0 }}>
                 <RoastText text={para} />
               </p>
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center" style={{ marginTop: "24px", gap: "8px" }}>
+          <div className="flex items-center" style={{ marginTop: "18px", gap: "8px" }}>
+            {/* Copy — left */}
             <motion.button
               type="button"
               onClick={copy}
@@ -372,33 +358,62 @@ function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
               whileTap={{ scale: 0.95 }}
               transition={spring}
               className="inline-flex items-center gap-2 rounded-lg border border-line bg-ink/50 hover:bg-ink text-softer hover:text-white font-semibold transition-colors"
-              style={{ padding: "8px 14px", fontSize: "13px" }}
+              style={{ padding: "7px 12px", fontSize: "13px" }}
             >
               {copied ? (
-                <>
-                  <span className="text-green"><Icon.Check /></span>
-                  copied
-                </>
+                <><span className="text-green"><Icon.Check /></span>copied</>
               ) : (
-                <>
-                  <Icon.Copy />
-                  copy
-                </>
+                <><Icon.Copy />copy</>
               )}
             </motion.button>
 
-            <motion.button
-              type="button"
-              onClick={onAgain}
-              whileHover={{ scale: 1.04, boxShadow: "0 0 22px rgba(255,128,0,0.35)" }}
-              whileTap={{ scale: 0.95 }}
-              transition={spring}
-              className="ml-auto inline-flex items-center gap-2 rounded-lg bg-orange hover:bg-orange-hot text-ink font-bold transition-colors"
-              style={{ padding: "8px 14px", fontSize: "13px" }}
-            >
-              <Icon.Redo />
-              Roast me again
-            </motion.button>
+            {/* Right group */}
+            <div className="ml-auto flex items-center" style={{ gap: "8px" }}>
+              <motion.button
+                type="button"
+                onClick={downloadImage}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.95 }}
+                transition={spring}
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-ink/50 hover:bg-ink text-softer hover:text-white font-semibold transition-colors"
+                style={{ padding: "7px 12px", fontSize: "13px" }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Save
+              </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={shareToX}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.95 }}
+                transition={spring}
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-ink/50 hover:bg-ink text-softer hover:text-white font-semibold transition-colors"
+                style={{ padding: "7px 12px", fontSize: "13px" }}
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                Share
+              </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={onAgain}
+                whileHover={{ scale: 1.04, boxShadow: "0 0 22px rgba(255,128,0,0.35)" }}
+                whileTap={{ scale: 0.95 }}
+                transition={spring}
+                className="inline-flex items-center gap-2 rounded-lg bg-orange hover:bg-orange-hot text-ink font-bold transition-colors"
+                style={{ padding: "7px 12px", fontSize: "13px" }}
+              >
+                <Icon.Redo />
+                Roast me again
+              </motion.button>
+            </div>
           </div>
         </div>
       </section>
@@ -408,16 +423,16 @@ function ResultCard({ username, roast, onAgain, onClear }: ResultProps) {
 
 function Footer() {
   const stripes = [
-    { color: "#ff8000", top: "8px",  delay: 0 },
+    { color: "#ff8000", top: "8px", delay: 0 },
     { color: "#00e054", top: "30px", delay: 0.09 },
     { color: "#40bcf4", top: "52px", delay: 0.18 },
   ];
 
   return (
-    <footer style={{ marginTop: "80px" }}>
-      <div className="w-full flex justify-center" style={{ marginBottom: "40px" }}>
+    <footer style={{ marginTop: "48px" }}>
+      <div className="w-full flex justify-center" style={{ marginBottom: "28px" }}>
         <div className="text-center px-6" style={{ maxWidth: "480px" }}>
-          <p className="text-softer" style={{ fontSize: "14px" }}>
+          <p className="text-softer" style={{ fontSize: "13px" }}>
             Enjoyed the roast?{" "}
             <a
               href="https://trakteer.id/brofilepicture"
@@ -427,13 +442,12 @@ function Footer() {
             </a>{" "}
             <span aria-hidden="true">☕</span>
           </p>
-          <p className="text-mute" style={{ fontSize: "12px", marginTop: "10px" }}>
+          <p className="text-mute" style={{ fontSize: "11px", marginTop: "6px" }}>
             Unofficial fan project. Not affiliated with Letterboxd.
           </p>
         </div>
       </div>
 
-      {/* Animated stripe decoration */}
       <div className="relative overflow-hidden w-full" style={{ height: "72px" }} aria-hidden>
         {stripes.map(({ color, top, delay }) => (
           <motion.div
@@ -456,16 +470,12 @@ function Footer() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Main exported component                                            */
-/* ------------------------------------------------------------------ */
-
 export default function RoastForm() {
-  const [username, setUsername]   = useState("");
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState<string>("");
-  const [result, setResult]       = useState<RoastResult | null>(null);
-  const [msgIdx, setMsgIdx]       = useState(0);
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [result, setResult] = useState<RoastResult | null>(null);
+  const [msgIdx, setMsgIdx] = useState(0);
 
   useEffect(() => {
     if (!loading) { setMsgIdx(0); return; }
@@ -492,11 +502,9 @@ export default function RoastForm() {
       });
 
       const data = await response.json();
-
       if (!response.ok || !data.success) {
         throw new Error(data.error ?? "Something went wrong. Try again.");
       }
-
       setResult({ username: u, roast: data.roast.trim() });
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
@@ -520,7 +528,6 @@ export default function RoastForm() {
           "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,128,0,0.07), transparent 70%), radial-gradient(ellipse 60% 40% at 50% 100%, rgba(64,188,244,0.05), transparent 70%)",
       }}
     >
-      {/* Film grain overlay — no blend mode to avoid full-page recomposite */}
       <div
         aria-hidden
         className="fixed inset-0 pointer-events-none"
@@ -530,15 +537,12 @@ export default function RoastForm() {
         }}
       />
 
-      {/* Floating ambient orbs — will-change promotes to GPU compositor layers */}
       <div aria-hidden className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
         <div
           className="absolute rounded-full"
           style={{
-            width: "640px",
-            height: "640px",
-            left: "-120px",
-            top: "-180px",
+            width: "min(640px, 90vw)", height: "min(640px, 90vw)",
+            left: "-80px", top: "-140px",
             background: "radial-gradient(circle, rgba(255,128,0,0.065) 0%, transparent 70%)",
             animation: "float-a 28s ease-in-out infinite",
             willChange: "transform",
@@ -547,10 +551,8 @@ export default function RoastForm() {
         <div
           className="absolute rounded-full"
           style={{
-            width: "520px",
-            height: "520px",
-            right: "-90px",
-            bottom: "-120px",
+            width: "min(520px, 80vw)", height: "min(520px, 80vw)",
+            right: "-60px", bottom: "-100px",
             background: "radial-gradient(circle, rgba(64,188,244,0.055) 0%, transparent 70%)",
             animation: "float-b 34s ease-in-out infinite",
             willChange: "transform",
@@ -558,13 +560,12 @@ export default function RoastForm() {
         />
       </div>
 
-      {/* Content */}
       <div className="relative flex flex-col flex-1" style={{ zIndex: 1 }}>
         <Navbar />
 
         <main
           className="flex-1 flex flex-col items-center justify-center w-full"
-          style={{ paddingTop: "48px", paddingBottom: "40px" }}
+          style={{ paddingTop: "40px", paddingBottom: "40px" }}
         >
           <Hero />
 
@@ -584,8 +585,8 @@ export default function RoastForm() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="w-full text-center px-6"
-                style={{ maxWidth: "520px", marginTop: "12px", fontSize: "14px", color: "#e84e24" }}
+                className="w-full text-center"
+                style={{ maxWidth: "480px", padding: "0 24px", marginTop: "10px", fontSize: "14px", color: "#e84e24" }}
               >
                 {error}
               </motion.p>

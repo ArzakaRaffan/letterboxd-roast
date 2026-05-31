@@ -67,6 +67,10 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+::placeholder {
+  color: rgba(153, 170, 187, 0.7);
+}
+
 .input-wrapper:focus-within {
   border-color: rgba(0, 224, 84, 0.45) !important;
   box-shadow: 0 0 0 3px rgba(0, 224, 84, 0.08);
